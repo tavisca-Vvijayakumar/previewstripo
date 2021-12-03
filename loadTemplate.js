@@ -182,7 +182,7 @@ function DownloadtoCMS(htmltext) {
     };
     var config = {
         method: 'PUT',
-        url: 'https://api.contentstack.io/v3/content_types/new_content_type_for_test/entries/' + EntryUID,
+        url: 'https://api.contentstack.io/v3/content_types/' + contentUID + '/entries/' + EntryUID,
         headers: {
             'api_key': APIKeyparam,
             'authorization': authorizationparam,
