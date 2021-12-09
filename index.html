@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Stripo Plugin Example</title>
@@ -9,7 +10,9 @@
     <script type="application/javascript" src="notifications.js"></script>
     <script type="application/javascript" src="external_preview_popup.js"></script>
     <script type="application/javascript" src="loadTemplate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
     <div id="externalSystemContainer">
         <!--This is external system container where you can place plugin buttons -->
@@ -29,8 +32,27 @@
     <script>
         // Call this function to start plugin.
         document.querySelector('#previewButton').addEventListener('click', function () {
+            var userTitle = $('#titleAlertBox').val();
             window.StripoApi.compileEmail(function (error, html) {
-                window.ExternalPreviewPopup.openPreviewPopup(html);
+                if (error) {
+                    alert('Can not compile HTML: ' + error);
+                } else {
+                    var data = {
+                        "ProgramPhone": 1,
+                        "UserTitle": userTitle,
+                        "ProgramName": "Demo Airline",
+                        "clickaway": "Madrid"
+                    };
+
+                   var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                   $(doc).find('#flightCustomBlock> tbody').empty();
+                    $(doc).find('#flightCustomBlock> tbody').append(buildDynamicHTML(data));
+                  //  const win = window.open("", "win", `width=800,height=400,screenX=200,screenY=200`);
+                   // win.document.write(doc.documentElement.outerHTML);
+                
+                window.ExternalPreviewPopup.openPreviewPopup(doc.documentElement.outerHTML);
+                }
             });
         });
         document.querySelector("#compileHtmlClient").addEventListener('click', function () {
