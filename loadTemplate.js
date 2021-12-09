@@ -85,7 +85,6 @@ async function loadDemoTemplate(callback) {
     var css = "";
     callback({ html: html, css: css });
 }
-
 function Sendhtmlcodetos3(html) {
     const params = {
         TemplateName: "DemoTemplate",
@@ -111,10 +110,11 @@ function initPlugin(template) {
     script.src = 'https://plugins.stripo.email/static/latest/stripo.js';
     script.onload = function () {
         window.Stripo.init({
-
             mergeTags: MyObj,
             extensions: [{ globalName: 'DemoHeaderBlockExtension', url: 'https://tavisca-vvijayakumar.github.io/CustomBlock/main.extension.js' },
-            { globalName: 'ProductBlockExtension', url: 'https://tavisca-vvijayakumar.github.io/ProductBlock/ProductBlock/main.extension_Product.js' }],
+                         { globalName: 'ProductBlockExtension', url: 'https://tavisca-vvijayakumar.github.io/ProductBlock/ProductBlock/main.extension_Product.js' },
+                         { globalName: 'DemoHeaderBlockExtension', url: 'https://tavisca-sthale.github.io/DemoCustomBlockRepo/main.af6fada188c996d3d992.extension.js' }
+                        ],
             productDemoBlock: {
                 enabled: true,
                 groups: [{
@@ -156,10 +156,10 @@ function initPlugin(template) {
             getAuthToken: function (callback) {
                 request('POST', 'https://plugins.stripo.email/api/v1/auth',
                     JSON.stringify({
-                        // pluginId: 'f7daf1549bed437488ed8c1fe92f3e20',
-                        //secretKey: '6192a5b950614b5eb8ae05f20f395dec'
-                        pluginId: pluginIdval,
-                        secretKey: secretKeyval
+                         pluginId: 'f7daf1549bed437488ed8c1fe92f3e20',
+                        secretKey: '6192a5b950614b5eb8ae05f20f395dec'
+                       // pluginId: pluginIdval,
+                       // secretKey: secretKeyval
                     }),
                     function (data) {
                         callback(JSON.parse(data).token);
@@ -202,6 +202,67 @@ function DownloadtoCMS(htmltext) {
 
 }
 
+function buildDynamicHTML(data) {
+
+    var htmlMarkup = getHtmlBlockAPI();
+
+    replacePlaceHolder(data).forEach(item => {
+
+        htmlMarkup = htmlMarkup.replace(new RegExp(item.key, "gi"), item.value);
+
+    });
+
+    return htmlMarkup;
+
+}
+
+
+
+function replacePlaceHolder(data) {
+
+    console.log($('#titleAlertBox').val())
+
+    return [
+
+        { key: '#ProgramPhone#', value: data.ProgramPhone },
+
+        { key: '#UserTitle', value: data.UserTitle },
+
+        { key: '#ProgramName#', value: data.ProgramName },
+
+        { key: '#clickaway#', value: data.clickaway }
+
+    ];
+
+}
+
+
+function getDefaultLayoutForBlock() {
+    return `<tr>
+                        <td>
+                            <span class="es-icon-image" title="flightCustomBlock"></span>
+                            <span class="block-text">Important Information Added</span>
+                        </td>
+                    </tr>`
+}
+
+function getHtmlBlockAPI() {
+
+    return `
+
+    <tr class="order-details-#ProgramPhone#" style="border:1px solid">
+
+    <td style="width:100%;">
+
+    <div style="padding:5px"><strong>#UserTitle</strong></div>
+
+    <div style="padding:5px">Welcome to #ProgramName# , Click here to view <a href="https://www.google.com/"  target="_blank">#UserTitle</a></div>
+
+    </td>
+
+    </tr>`
+
+}
 MyObj = [{
     "category": "Flight detail",
     "entries": [
