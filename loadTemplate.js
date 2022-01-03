@@ -5,7 +5,7 @@ var EntryUID = {};
 var contentUID = {};
 var emptytemplate = {};
 var APIKeyparam={};
-var authorizationparam={};
+var authtokenparam={};
 window.addEventListener("message", (event) => {
     console.log(event);
     var jsondata = event.data;
@@ -14,7 +14,7 @@ window.addEventListener("message", (event) => {
     EntryUID = jsondata.EntryUID;
     contentUID = jsondata.contentUID;
     APIKeyparam=jsondata.APIKey;
-    authorizationparam=jsondata.authorization;
+    authtokenparam=jsondata.authtoken;
     console.log(`pluginId is ${pluginIdval} secretKey is  ${secretKeyval}`);
     loadDemoTemplate(initPlugin);
 });
@@ -44,7 +44,7 @@ function loademptytemplate() {
             url: 'https://api.contentstack.io/v3/content_types/' + contentUID + '/entries/' + EntryUID,
             headers: {
                 'api_key': APIKeyparam,
-                'authorization': authorizationparam,
+                'authtoken': authtokenparam,
                 'Content-Type': 'application/json',
             },
             //  data: contenttypebody
@@ -185,7 +185,7 @@ function DownloadtoCMS(htmltext) {
         url: 'https://api.contentstack.io/v3/content_types/' + contentUID + '/entries/' + EntryUID,
         headers: {
             'api_key': APIKeyparam,
-            'authorization': authorizationparam,
+            'authtoken': authtokenparam,
             'Content-Type': 'application/json',
         },
         data: Data
