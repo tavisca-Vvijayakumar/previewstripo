@@ -6,19 +6,18 @@ var contentUID = {};
 var emptytemplate = {};
 var APIKeyparam={};
 var authtokenparam={};
-// window.addEventListener("message", (event) => {
-//     console.log(event);
-//     var jsondata = event.data;
-//     pluginIdval = jsondata.pluginId;
-//     secretKeyval = jsondata.secretKey;
-//     EntryUID = jsondata.EntryUID;
-//     contentUID = jsondata.contentUID;
-//     APIKeyparam=jsondata.APIKey;
-//     authtokenparam=jsondata.authtoken;
-//     console.log(`pluginId is ${pluginIdval} secretKey is  ${secretKeyval}`);
-//     loadDemoTemplate(initPlugin);
-// });
-  loadDemoTemplate(initPlugin);
+ window.addEventListener("message", (event) => {
+     console.log(event);
+     var jsondata = event.data;
+     pluginIdval = jsondata.pluginId;
+    secretKeyval = jsondata.secretKey;
+     EntryUID = jsondata.EntryUID;
+     contentUID = jsondata.contentUID;
+     APIKeyparam=jsondata.APIKey;
+     authtokenparam=jsondata.authtoken;
+     console.log(`pluginId is ${pluginIdval} secretKey is  ${secretKeyval}`);
+     loadDemoTemplate(initPlugin);
+ });
 // Utility methods
 function request(method, url, data, callback) {
     var req = new XMLHttpRequest();
@@ -75,23 +74,17 @@ function reademptytemplateFile(file) {
     });
 }
 
-function loadDemoTemplate(callback) {
-    request('GET', 'https://raw.githubusercontent.com/ardas/stripo-plugin/master/Public-Templates/Basic-Templates/Trigger%20newsletter%20mockup/Trigger%20newsletter%20mockup.html', null, function(html) {
-        request('GET', 'https://raw.githubusercontent.com/ardas/stripo-plugin/master/Public-Templates/Basic-Templates/Trigger%20newsletter%20mockup/Trigger%20newsletter%20mockup.css', null, function(css) {
-            callback({html: html, css: css});
-        });
-    });
-}
-// async function loadDemoTemplate(callback) {
-//     var html = "";
-//     html = await loademptytemplate()
-//     if (html == "" || html === undefined) {
-//         emptytemplate = await reademptytemplateFile("https://assets.contentstack.io/v3/assets/blt9c861b1a4b69e623/blt8cd1fefe9a5e5205/61978655f0aa502b90b53c04/Default_Stripo_template.txt")
-//         html = emptytemplate;
-//     }
-//     var css = "";
-//     callback({ html: html, css: css });
-// }
+
+ async function loadDemoTemplate(callback) {
+     var html = "";
+     html = await loademptytemplate()
+     if (html == "" || html === undefined) {
+         emptytemplate = await reademptytemplateFile("https://assets.contentstack.io/v3/assets/blt9c861b1a4b69e623/blt8cd1fefe9a5e5205/61978655f0aa502b90b53c04/Default_Stripo_template.txt")
+         html = emptytemplate;
+     }
+     var css = "";
+     callback({ html: html, css: css });
+ }
 function Sendhtmlcodetos3(html) {
     const params = {
         TemplateName: "DemoTemplate",
@@ -163,10 +156,10 @@ function initPlugin(template) {
             getAuthToken: function (callback) {
                 request('POST', 'https://plugins.stripo.email/api/v1/auth',
                     JSON.stringify({
-                         pluginId: 'f7daf1549bed437488ed8c1fe92f3e20',
-                        secretKey: '6192a5b950614b5eb8ae05f20f395dec'
-                       // pluginId: pluginIdval,
-                       // secretKey: secretKeyval
+                        // pluginId: 'f7daf1549bed437488ed8c1fe92f3e20',
+                        //secretKey: '6192a5b950614b5eb8ae05f20f395dec'
+                        pluginId: pluginIdval,
+                        secretKey: secretKeyval
                     }),
                     function (data) {
                         callback(JSON.parse(data).token);
